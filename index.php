@@ -3,18 +3,18 @@
   require_once('config.php');
 ?>
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <meta name="keywords" content="QuickAuth, free, quick, OAuth"/>
-    <meta name="description" content="QuickAuth is an implement of authorization. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
+    <!-- Bootstrap core CSS -->
+    <meta name="keywords" content="云通讯录,电话本,联系人,同步,备份,网络备份,联系人去重"/>
+    <meta name="description" content="云通讯录是基于web的在线联系人管理中心。只需一次导入或添加，即可随时随地，在任意设备上使用，避免了更换设备所带来的联系人信息丢失或转移通讯录的麻烦。并且，这一切都是免费的" />
     <meta name="author" content="Newnius"/>
     <link rel="icon" href="favicon.ico"/>
-    <title>QuickAuth | free and quick auth</title>
-    <!-- Bootstrap core CSS -->
+    <title>云通讯录</title>
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Custom styles for this template -->
     <link href="style.css" rel="stylesheet"/>
@@ -70,7 +70,6 @@
 </div> <!-- /container -->
 <?php require_once('footer.php'); ?>
 
-  <script src="script.js"></script>
   <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
   <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>

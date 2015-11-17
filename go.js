@@ -1,21 +1,54 @@
 selections = [];
 
 $(function(){
-
   $table = $("#table-contacts");
+
+  var BootstrapTable = $.fn.bootstrapTable.Constructor,
+        _initToolbar = BootstrapTable.prototype.initToolbar,  
+        _initSearch = BootstrapTable.prototype.initSearch;
+
+
+  BootstrapTable.prototype.initToolbar = function() {
+    _initToolbar.apply(this, Array.prototype.slice.apply(arguments));
+    var that = this;
+    $(document).on('click', 'div[id="groups"] ul li a', function(e){
+      var groupId = $(this).data('group-id') ; 
+      that.options.selectedGroup = groupId;
+      that.options.pageNumber = 1;
+      that.searchText = window.groupNames[groupId];
+      that.initSearch();
+      that.updatePagination();
+      //add to indicate that user empty this to really refresh
+      that.$toolbar.find('.search input').val('gId:'+groupId);
+      });
+   }
+
+  BootstrapTable.prototype.initSearch = function () {
+    _initSearch.apply(this, Array.prototype.slice.apply(arguments));
+    if (this.options.selectedGroup == undefined || this.options.selectedGroup ==-1) {
+            return;
+        }
+      var groupId = this.options.selectedGroup;
+      var originData = $table.bootstrapTable('getData');
+      var newData = [];
+      for(var index in originData){
+        if(originData[index].group_id == groupId)
+          newData.push(originData[index]);
+      }
+      this.data = newData;
+      //reset to make search work
+      this.options.selectedGroup = -1;
+    };
+
+
   loadAndShowGroups(loadAndShowAllContacts);
 
   $('#btn-add').click(
     function(){
       $('#addContactModal').modal('show');
+      showGroupOptions('add');
     }
   );
-
-$(document).on('click', 'div[id="groups"] ul li a', function(){
-      var groupId = $(this).data('group-id') ; // userName = '脚本之家'
-      alert(groupId);
-      console.log($(this));
-  });
 
   $('#btn-add-contact').click(
     function(){
@@ -28,7 +61,6 @@ $(document).on('click', 'div[id="groups"] ul li a', function(){
       );
       var remark = $('#add-contact-remark').val();
       var group = $('#add-contact-group').val();
-      alert(telephones);
       var ajax = $.ajax({
         url: "http://localhost/contacts/ajax.php?action=addContact",
         type: 'POST',
@@ -61,7 +93,6 @@ $(document).on('click', 'div[id="groups"] ul li a', function(){
       var contactId = $('#update-contact-id').val();
       var contactName = $('#update-contact-name').val();
       var array = new Array();
-      var cnt = 0;
       $('#update-contact-telephones').children("input").each(
         function(){
           array.push(($(this)).val());
@@ -103,40 +134,7 @@ $(document).on('click', 'div[id="groups"] ul li a', function(){
   $table.on('check.bs.table uncheck.bs.table ' 
     + 'check-all.bs.table uncheck-all.bs.table', function () {
     $("#remove").prop('disabled', !$table.bootstrapTable('getSelections').length);
-      // save your data, here just save the current page
        selections = getIdSelections();
-      // push or splice the selections if you want to save all data selections
-  });
-
-
-  $table.on('click-row.bs.table', function (e, value, args) {
-
-    $('#updateContactModal').modal('show');
-    
-    $('#update-contact-id').val(value.contact_id);
-    $('#update-contact-name').val(value.contact_name);
-    
-    $('#update-contact-telephones').children().remove();
-    var telephones = value.telephones.split(";");
-    for(var i=0;i<telephones.length;i++){
-      var newPhone = '<label for="telephone" class="sr-only">电话号</label>'     
-      + '<input type="telephone" class="form-group form-control" placeholder="电话号码" value="'
-      + telephones[i]
-      + '">';
-      $('#update-contact-telephones').append(newPhone);
-    }
-    $('#update-contact-remark').val(value.remark);
-    $('#update-contact-group').children().remove();
-    var newGroupOption = '<option value="0">默认分组</option>' 
-    $('#update-contact-group').append(newGroupOption);
-    for(var i=0; i<groups.length; i++){
-      var newGroupOption = '<option value="'
-        + groups[i].group_id 
-        + '">'
-        + groups[i].group_name
-        + '</option>' 
-      $('#update-contact-group').append(newGroupOption);
-    }
   });
 
 
@@ -153,22 +151,6 @@ $(document).on('click', 'div[id="groups"] ul li a', function(){
 
 });
 
-
-var phoneFormatter = function(telephones){
-  return telephones.split(";")[0];
-}
-
-var idFormatter = function(id){
-  if(id==0 || id===null)return "默认分组";
-  return window.groupNames[id];
-}
-
-function getIdSelections() {
-  return $.map($table.bootstrapTable('getSelections'), function (row) {
-      return row.contact_id;
-   });
-}
-
 function loadAndShowAllContacts(){
   $table.bootstrapTable({
     url: 'http://localhost/contacts/ajax.php?action=getAllContacts', // 接口 URL 地址
@@ -180,39 +162,127 @@ function loadAndShowAllContacts(){
     search: true, // 开启搜索功能
     showColumns: true, // 开启自定义列显示功能
     showRefresh: true, // 开启刷新功能
-    showToggle:true,//开启视图切换功能
-    showPaginationSwitch:true,//开启视图切换功能
+    showToggle: true,//开启视图切换功能
+    showPaginationSwitch: false,//关闭分页功能
     minimumCountColumns: 2, // 设置最少显示列个数
-    clickToSelect: false, // true: 单击行即可以选中
+    clickToSelect: true, // true: 单击行即可以选中
     sortName: 'contact_id', // 设置默认排序为 name
     sortOrder: 'asc', // 设置排序为反序 desc
     smartDisplay: true, // 智能显示 pagination 和 cardview 等
+    mobileResponsive: true,
+    showExport: true, 
     columns: [{ // 列设置
         field: 'state',
+        title: '选择',
         checkbox: true // 使用复选框
     }, {
         field: 'contact_name',
-        title: 'name',
+        title: '姓名',
         align: 'right',
         valign: 'bottom',
         sortable: true // 开启排序功能
     }, {
         field: 'telephones',
-        title: 'phone',
+        title: '电话',
         align: 'center',
         valign: 'middle',
         sortable: true,
         formatter: phoneFormatter
     }, {
         field: 'group_id',
-        title: 'group',
+        title: '分组',
         align: 'left',
         valign: 'top',
         sortable: true,
         formatter: idFormatter,
+    }, {
+        field: 'operate',
+        title: '操作',
+        align: 'center',
+        events: operateEvents,
+        formatter: operateFormatter
     }]
   });
 }
+
+var phoneFormatter = function(telephones){
+  return telephones.replace(';','<br/>');
+}
+
+var idFormatter = function(id){
+  if(id===null)id=0;
+  return window.groupNames[id];
+}
+
+function getIdSelections() {
+  return $.map($table.bootstrapTable('getSelections'), function (row) {
+      return row.contact_id;
+   });
+}
+
+function operateFormatter(value, row, index) {
+  return [
+    '<a class="edit" href="javascript:void(0)" title="Edit">',
+    '<i class="glyphicon glyphicon-edit"></i>',
+    '</a>  ',
+    '<a class="like" href="javascript:void(0)" title="Like">',
+    '<i class="glyphicon glyphicon-heart"></i>',
+    '</a>  ',
+    '<a class="remove" href="javascript:void(0)" title="Remove">',
+    '<i class="glyphicon glyphicon-remove"></i>',
+    '</a>'
+  ].join('');
+}
+
+
+window.operateEvents = {
+  'click .edit': function (e, value, row, index) {
+    $('#updateContactModal').modal('show');
+       
+    var contact = row;
+    $('#update-contact-id').val(contact.contact_id);
+    $('#update-contact-name').val(contact.contact_name);
+    $('#update-contact-telephones').children().remove();
+    var telephones = contact.telephones.split(";");
+    for(var i=0;i<telephones.length;i++){
+      var newPhone = '<label for="telephone" class="sr-only">电话号</label>'     
+        + '<input type="telephone" class="form-group form-control" placeholder="电话号码" value="'
+        + telephones[i]
+        + '">';
+      $('#update-contact-telephones').append(newPhone);
+    }
+    $('#update-contact-remark').val(contact.remark);
+    showGroupOptions('update', contact.group_id);
+  },
+  'click .like': function (e, value, row, index) {
+    //alert('You click like action, row: ' + JSON.stringify(row));
+  },
+  'click .remove': function (e, value, row, index) {
+    if(!confirm('确认删除' + row.contact_name + '吗（操作不可逆）')){
+       return;
+    }
+    deleteContact(row.contact_id);
+    $table.bootstrapTable('remove', {
+      field: 'contact_id',
+      values: Array(row.contact_id)
+    });
+    $("#remove").prop('disabled', !$table.bootstrapTable('getSelections').length);
+  }
+};
+
+  var showGroupOptions = function(modal, selected = -1){
+    $('#' + modal + '-contact-group').children().remove();
+    for(var groupId in groupNames){
+      var newGroupOption = '<option value="'
+        + groupId 
+        + '"'
+        + (groupId==selected?' selected="selected"':' ')
+        + '>'
+        + groupNames[groupId]
+        + '</option>'; 
+      $('#' + modal + '-contact-group').append(newGroupOption);
+    }
+  }
 
 var loadAndShowGroups = function(callback){
   var ajax = $.ajax({
@@ -224,6 +294,7 @@ var loadAndShowGroups = function(callback){
   ajax.done(function(groupsStr){
     window.groups = JSON.parse(groupsStr);
     window.groupNames = new Object();
+      window.groupNames[0] = '默认分组';
       for(var i=0; i<groups.length; i++){
         window.groupNames[groups[i].group_id] = groups[i].group_name;
       }
@@ -237,21 +308,16 @@ var loadAndShowGroups = function(callback){
 };
 
 var showGroups = function(){
-  $('#groups ul').children().remove();
+  var groupList = $('#groups ul');
+  groupList.children().remove();
   
+  for(var i in groupNames){
   var newGroupOption = '<li role="representation"><a data-group-id="'
-    + '0'
+    + i 
     +'" href="#">'
-    + '默认分组'
+    + groupNames[i]
     + '</a></li>'
-    $('#groups ul').append(newGroupOption);
-  for(var i=0; i<groups.length; i++){
-  var newGroupOption = '<li role="representation"><a data-group-id="'
-    + groups[i].group_id 
-    +'" href="#">'
-    + groups[i].group_name
-    + '</a></li>'
-    $('#groups ul').append(newGroupOption);
+    groupList.append(newGroupOption);
   }
 };
 
