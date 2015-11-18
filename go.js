@@ -11,8 +11,8 @@ $(function(){
   BootstrapTable.prototype.initToolbar = function() {
     _initToolbar.apply(this, Array.prototype.slice.apply(arguments));
     var that = this;
-    $(document).on('click', 'div[id="groups"] ul li a', function(e){
-      var groupId = $(this).data('group-id') ; 
+    $(document).on('click', 'div[id="groups"] ul li .clickable', function(e){
+      var groupId = $(this).parent().data('group-id') ; 
       that.options.selectedGroup = groupId;
       that.options.pageNumber = 1;
       that.searchText = window.groupNames[groupId];
@@ -148,6 +148,58 @@ $(function(){
     $("remove").prop('disabled', true);
   });
 
+    $('#groups').on('mouseout', 'ul li', function(e){
+       $(this).children('.operates').addClass('hidden');
+    });
+    $('#groups').on('mouseover', 'ul li', function(e){
+       $(this).children('.operates').removeClass('hidden');
+    });
+    $('#groups').on('click', 'ul li .group-edit', function(e){
+      var thisLi = $(this).parent().parent();
+      var groupId = thisLi.data('group-id'); 
+      thisLi.children().remove();
+      var inputEle = '<div class="input-group">'
+        + '<input type="text" class="form-control" value="'
+        + groupNames[groupId]
+        + '">'
+        + '<a class="input-group-addon group-edit-ok" href="javascript:void(0)"><span class="glyphicon glyphicon-ok"></span></a>'
+        + '<a class="input-group-addon group-edit-cancel" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+        + '</div>';
+      thisLi.append(inputEle);
+    });
+    $('#groups').on('click', 'ul li .group-remove', function(e){
+      var groupId = $(this).parent().data('group-id'); 
+    });
+
+    $('#groups').on('click', 'ul li .group-edit-ok', function(e){
+      var thisLi = $(this).parent().parent();
+      var groupId = thisLi.data('group-id'); 
+      var newGroupName = thisLi.find('input').val()
+      thisLi.children().remove();
+      var newGroupLiInner = '<a class="clickable" href="#">'
+        + newGroupName
+        + '</a>'
+        + '<div class="hidden operates" style="float:right">'
+        + '<a class="group-edit" href="javascript:void(0)"><span class="glyphicon glyphicon-edit"></span></a>'
+        + '&nbsp;&nbsp;<a class="group-remove" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+        + '</div>'
+      thisLi.append(newGroupLiInner);
+      updateGroupName(groupId, newGroupName);
+    });
+
+    $('#groups').on('click', 'ul li .group-edit-cancel', function(e){
+      var thisLi = $(this).parent().parent();
+      var groupId = thisLi.data('group-id'); 
+      thisLi.children().remove();
+      var newGroupLiInner = '<a class="clickable" href="#">'
+        + groupNames[groupId]
+        + '</a>'
+        + '<div class="hidden operates" style="float:right">'
+        + '<a class="group-edit" href="javascript:void(0)"><span class="glyphicon glyphicon-edit"></span></a>'
+        + '&nbsp;&nbsp;<a class="group-remove" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+        + '</div>'
+      thisLi.append(newGroupLiInner);
+    });
 
 });
 
@@ -312,11 +364,15 @@ var showGroups = function(){
   groupList.children().remove();
   
   for(var i in groupNames){
-  var newGroupOption = '<li role="representation"><a data-group-id="'
-    + i 
-    +'" href="#">'
+  var newGroupOption = '<li class="list-group-item" data-group-id="'
+    + i
+    + '"><a class="clickable" href="#">'
     + groupNames[i]
-    + '</a></li>'
+    + '</a>'
+    + '<div class="hidden operates" style="float:right">'
+    + '<a class="group-edit" href="javascript:void(0)"><span class="glyphicon glyphicon-edit"></span></a>'
+    + '&nbsp;&nbsp;<a class="group-remove" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+    + '</div></li>'
     groupList.append(newGroupOption);
   }
 };
@@ -342,3 +398,36 @@ var deleteContact = function(contactId){
     alert("Request failed :" + textStatus);
   });
 };
+
+  var updateGroupName = function(groupId, newGroupName){
+      if(isNaN(groupId) || groupNames[groupId]==undefined || groupNames[groupId]==newGroupName)
+        return;
+      var oldGroupName = window.groupNames[groupId];
+      window.groupNames[groupId] = newGroupName;
+      $table.bootstrapTable("refresh");
+      var ajax = $.ajax({
+        url: "http://localhost/contacts/ajax.php?action=updateGroup",
+        type: 'POST',
+        data: {
+          groupId: groupId,
+          newGroupName: newGroupName
+	}
+      });
+
+      ajax.done(function(resStr){
+        response = JSON.parse(resStr);
+	if(response.errno === 0 ){
+          $window.groupNames[groupId] = newGroupName;
+          $table.bootstrapTable("refresh");
+	}else{
+          //alert(response.errno);
+          window.groupNames[groupId] = newGroupName;
+          $table.bootstrapTable("refresh");
+	}
+      });
+
+      ajax.fail(function(jqXHR,textStatus){
+        alert("Request failed :" + textStatus);
+      });
+    }
+

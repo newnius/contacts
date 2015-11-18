@@ -101,5 +101,29 @@
       return null;
     }
   }
+
+
+  function add_group($group_name, $uid){
+    $sql = 'INSERT INTO `group`(`group_name`, `uid`) VALUES(?, ?)';
+    $params = array($group_name, $uid);
+    $affected_rows = (new MysqlPDO())->execute($sql, $params);
+    return $affected_rows == 1;
+  }
+
   
+  function update_contact_by_id($contact_id, $contact_name, $telephones, $remark, $uid, $group_id){
+    $contact = get_contact_by_id($contact_id);
+    if($contact == null || $contact['uid'] != $uid){
+      return false;
+    }
+
+    $sql = 'UPDATE `contact` SET `contact_name` = ?, `telephones` = ?, `remark` = ? WHERE `contact_id` = ?';
+    $params = array($contact_name, $telephones, $remark, $contact_id);
+    $affected_rows = (new MysqlPDO())->execute($sql, $params);
+    if($contact['group_id'] != $group_id){
+      $affected_rows |= move_contact_to_group($contact_id, $group_id, $uid);
+    }
+    return $affected_rows == 1;
+  }
+
 ?>

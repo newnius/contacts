@@ -1,10 +1,12 @@
 <?php
   session_start();
+  $_SESSION['contact_uid'] = 1;
   require_once('config.php');
+/*
   if(!(isset($_SESSION['contact_username']) )){
     header('location:'.SITE.'/info?notloged');
     exit;
-  }
+  }*/
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -36,10 +38,10 @@
         <div class="col-sm-4 col-md-3 hidden-xs">
           <div id="groups" class="panel panel-default">
             <div class="panel-heading">分组</div>
-            <ul class="nav nav-pills nav-stacked panel-body">
-              <li role="presentation" >
+            <ul class="list-group">
+              <a class="list-group-item" >
                 <span class="text-info">Loading...</span>
-              </li>
+              </a>
             </ul>
             
           </div>

@@ -24,7 +24,8 @@
 
     case 'addContact':
       $res = add_contact($_POST['contactName'], $_POST['telephones'], $_POST['remark'], $uid ,$_POST['groupId']);
-      $response['errno'] = $res==1?0:1;
+      $response['errno'] = $res==1? 0 : 1;
+      $response['msg'] = $res==1? '':'添加联系人失败';
       echo json_encode($response);
       break;
 
@@ -32,12 +33,14 @@
       $contact_id = $_GET['contactId'];
       $res = delete_contact_by_id($contact_id, $uid);
       $response['errno'] = $res==true?0:1;
+      $response['msg'] = $res==1? '':'删除联系人失败';
       echo json_encode($response);
       break;
 
     case 'updateContact':
       $res = update_contact_by_id($_POST['contactId'], $_POST['contactName'], $_POST['telephones'], $_POST['remark'], $uid, $_POST['groupId']);
       $response['errno'] = $res==1?0:1;
+      $response['msg'] = $res==1? '':'更新联系人失败';
       echo json_encode($response);
       break;
   }
