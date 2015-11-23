@@ -1,3 +1,4 @@
+<?php require_once('config.php'); ?>
 <nav id="nav-header" class="navbar navbar-default">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->

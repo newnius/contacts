@@ -1,4 +1,5 @@
 selections = [];
+window.SITE = "http://localhost/contacts";
 
 $(function(){
   $table = $("#table-contacts");
@@ -72,7 +73,7 @@ $(function(){
       var remark = $('#add-contact-remark').val();
       var group = $('#add-contact-group').val();
       var ajax = $.ajax({
-        url: "http://localhost/contacts/ajax.php?action=addContact",
+        url: SITE + "/ajax.php?action=addContact",
         type: 'POST',
         data: {
           contactName: contactName,
@@ -88,7 +89,7 @@ $(function(){
           $('#addContactModal').modal('hide');
           $table.bootstrapTable("refresh");
 	}else{
-          alert('errorno');
+          alert(response.msg);
 	}
       });
 
@@ -113,7 +114,7 @@ $(function(){
       var remark = $('#update-contact-remark').val();
       var group = $('#update-contact-group').val();
       var ajax = $.ajax({
-        url: "http://localhost/contacts/ajax.php?action=updateContact",
+        url: SITE + "/ajax.php?action=updateContact",
         type: 'POST',
         data: {
           contactId: contactId,
@@ -130,7 +131,7 @@ $(function(){
           $('#updateContactModal').modal('hide');
           $table.bootstrapTable("refresh");
 	}else{
-          alert(response.errno);
+          alert(response.msg);
 	}
       });
 
@@ -139,7 +140,6 @@ $(function(){
       });
     }
   );
-
 
 
   $table.on('check.bs.table uncheck.bs.table ' 
@@ -284,7 +284,7 @@ $(function(){
 
 function loadAndShowAllContacts(){
   $table.bootstrapTable({
-    url: 'http://localhost/contacts/ajax.php?action=getAllContacts', // 接口 URL 地址
+    url: SITE + '/ajax.php?action=getAllContacts', // 接口 URL 地址
     cache: true, // 缓存，避免每次排序操作都重新抓取信息
     striped: true, // 隔行加亮
     pagination: true, // 开启分页功能
@@ -319,6 +319,13 @@ function loadAndShowAllContacts(){
         valign: 'middle',
         sortable: true,
         formatter: phoneFormatter
+    }, {
+        field: 'remark',
+        title: '备注',
+        align: 'center',
+        valign: 'middle',
+        sortable: false,
+        visible: false,
     }, {
         field: 'group_id',
         title: '分组',
@@ -424,7 +431,7 @@ window.operateEvents = {
 
 var loadAndShowGroups = function(callback){
   var ajax = $.ajax({
-    url: "http://localhost/contacts/ajax.php?action=getAllGroups",
+    url: SITE + "/ajax.php?action=getAllGroups",
     type: 'GET',
     data: {  }
   });
@@ -477,16 +484,17 @@ var deleteContacts = function(ids){
 
 var deleteContact = function(contactId){
   var ajax = $.ajax({
-    url: "http://localhost/contacts/ajax.php?action=deleteContact",
-    type: 'GET',
+    url: SITE + "/ajax.php?action=deleteContact",
+    type: 'POST',
     data: { contactId:contactId }
   });
 
   ajax.done(function(groupsStr){
+    
   });
 
   ajax.fail(function(jqXHR,textStatus){
-          $table.bootstrapTable("refresh");
+    $table.bootstrapTable("refresh");
     alert("Request failed :" + textStatus);
   });
 };
@@ -498,7 +506,7 @@ var deleteContact = function(contactId){
       window.groupNames[groupId] = newGroupName;
       $table.bootstrapTable("refresh");
       var ajax = $.ajax({
-        url: "http://localhost/contacts/ajax.php?action=updateGroup",
+        url: SITE + "/ajax.php?action=updateGroup",
         type: 'POST',
         data: {
           groupId: groupId,
@@ -512,7 +520,7 @@ var deleteContact = function(contactId){
           window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
 	}else{
-          //alert(response.errno);
+          alert(response.msg);
           window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
 	}
@@ -529,7 +537,7 @@ var deleteContact = function(contactId){
       //window.groupNames[groupId] = window.groupNames[0];
       //$table.bootstrapTable("refresh");
       var ajax = $.ajax({
-        url: "http://localhost/contacts/ajax.php?action=deleteGroup",
+        url: SITE + "/ajax.php?action=deleteGroup",
         type: 'POST',
         data: {
           groupId: groupId
@@ -555,7 +563,7 @@ var deleteContact = function(contactId){
 
   var createGroup = function(groupName){
       var ajax = $.ajax({
-        url: "http://localhost/contacts/ajax.php?action=createGroup",
+        url: SITE + "/ajax.php?action=createGroup",
         type: 'POST',
         data: {
           groupName: groupName

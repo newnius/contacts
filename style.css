@@ -2,3 +2,30 @@
   max-width: 320px;
   margin: 0 auto;
 }
+
+footer{
+  clear:both;
+  display:block;
+  text-align:center;
+  font-size:13px;
+  max-width:360px;
+  margin: 0px auto;
+}
+
+footer ul{
+  list-style: none;
+}
+
+footer li{
+  float: left;
+}
+
+footer a:link, footer a:visited{
+  text-decoration: none;
+  color: #777;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  color: #000000;
+}

@@ -2,7 +2,7 @@
   require_once('class-pdo.php');
 
   function add_contact($contact_name, $telephones, $remark, $uid, $group_id = 0){
-    if(!is_numeric($group_id) || !$group_id>0){
+    if(!is_numeric($group_id) || !($group_id>=0)){
       return false;
     }
     $sql = 'INSERT INTO `contact`(`contact_name`, `telephones`, `remark`, `uid`,  `group_id`, `add_time`) VALUES(?, ?, ?, ?, ?, ?)';
@@ -13,7 +13,7 @@
 
 
   function delete_contact_by_id($contact_id, $uid){
-    if(!is_numeric($contact_id) || !$contact_id>0){
+    if(!is_numeric($contact_id) || !($contact_id>0)){
       return false;
     }
     $contact = get_contact_by_id($contact_id);
@@ -29,7 +29,7 @@
 
 
   function update_contact_by_id($contact_id, $contact_name, $telephones, $remark, $uid, $group_id){
-    if(!is_numeric($contact_id) || !is_numeric($group_id) || !$group_id > 0 || !$contact_id > 0){
+    if(!is_numeric($contact_id) || !is_numeric($group_id) || !($group_id >= 0) || !($contact_id > 0)){
       return false;
     }
     $contact = get_contact_by_id($contact_id);
