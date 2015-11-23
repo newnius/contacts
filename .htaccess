@@ -1,6 +1,4 @@
 RewriteEngine on 
-RewriteCond %{HTTP_HOST}: ^jluewu.com
-RewriteRule ^(.*)$ http://www.jluewu.com/$1 [L,R=301]
 
 Order Allow,Deny
 Deny from 222.186.0.0/16
@@ -9,8 +7,5 @@ Allow from all
 RewriteRule ^join$ register.php
 RewriteRule ^main$ main.php
 RewriteRule ^help$ help.php
-
-RewriteRule ^detail/([0-9]+).html$ goods_detail.php?id=$1
-
-RewriteRule ^search/([^/]+)/dearest/([0-9]+)$ /goods_list.php?name=$1&by=price&page=$2
+RewriteRule ^telephone$ telephone.php
 

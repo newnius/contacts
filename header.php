@@ -24,10 +24,11 @@
         </form>
       <?php if(!isset($_SESSION['contact_username'])){ ?>
         <li id='login'><a href="http://quickauth.newnius.com/login.php?redirect=<?php echo SITE ?>/auth.php">登录</a></li>
-        <li><a href="<?php echo SITE.'/join' ?>">注册</a></li>
+        <!--<li><a href="<?php echo SITE.'/join' ?>">注册</a></li>-->
+        <li id='join'><a href="http://quickauth.newnius.com/login.php?redirect=<?php echo SITE ?>/auth.php">注册</a></li>
       <?php }else{
       ?>
-        <li><a href="<?php echo SITE.'/main#profile' ?>"><?php echo htmlspecialchars($_SESSION['contact_username']); ?></a></li>
+        <li><a href="<?php echo SITE.'/main' ?>"><?php echo htmlspecialchars($_SESSION['contact_username']); ?></a></li>
       <?php } ?>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多<span class="caret"></span></a>
@@ -35,7 +36,7 @@
             <li><a href="help.php">帮助</a></li>
             <li role="separator" class="divider"></li>
             <?php if(isset($_SESSION['contact_username'])){ ?>
-            <li><a href="<?php echo SITE.'/main#logout' ?>">退出</a></li>
+            <li><a href="<?php echo SITE.'/logout' ?>">退出</a></li>
             <?php } ?>
           </ul>
         </li>
@@ -43,39 +44,6 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
-
-<!-- Signup Modal -->
-<div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div id="reg-model-body" class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id = "regModalLabel">加入到吉大易物</h4>
-      </div>
-      <div class="modal-body">
-        <form id="form-reg" action="#">
-          <label for="Username" class="sr-only">Username</label>
-          <input type="text" id="r-username" class="form-group form-control " placeholder="用户名" required autofocus>
-
-          <label for="Email" class="sr-only">Email</label>
-          <input type="email" id="r-email" class="form-group form-control " placeholder="邮箱" required autofocus>
-
-          <label for="Password" class="sr-only">Password</label>
-          <input type="password" id="r-password" class="form-group form-control" placeholder="密码" required>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" id="r-agree" value="r-agree" />我同意...
-            </label>
-            <hr/>
-            <div class="row">
-              <div class="col-md-6 col-sm-6"><button id="btn-register" type="submit" class="btn btn-primary btn-block">注册</button></div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 <!-- addContact Modal -->
@@ -91,9 +59,12 @@
           <label for="contact_name" class="sr-only">姓名</label>
           <input type="text" id="add-contact-name" class="form-group form-control " placeholder="姓名" required autofocus>
           
-          <div id="add-contact-telephones">
-	    <label for="telephone" class="sr-only">电话号</label>
-            <input type="telephone" class="form-group form-control " placeholder="电话号码" required autofocus>
+          <div id="add-contact-telephones" >
+	    <div class="input-group form-group"><label for="telephone" class="sr-only">电话号</label>
+            <input type="telephone" class="form-group form-control" placeholder="电话号码" required autofocus>
+            <a class="input-group-addon telephone-input-del" href="javascript:void(0)"><span class="glyphicon glyphicon-trash"></span></a>
+            </div>
+            <a class="telephone-add input-group form-group" href="javascript:void(0)"><span class="input-group-addon glyphicon glyphicon-plus"></span></a>
           </div>
           <label for="remark" class="sr-only">备注</label>
           <input type="text" id="add-contact-remark" class="form-group form-control" placeholder="备注" required>
@@ -125,6 +96,7 @@
           <input type="text" id="update-contact-name" class="form-group form-control " placeholder="姓名" required autofocus>
           
           <div id="update-contact-telephones">
+            <a class="telephone-add" href="javascript:void(0)"><span class="input-group-addon glyphicon glyphicon-plus"></span></a>
           </div>
           <label for="remark" class="sr-only">备注</label>
           <input type="text" id="update-contact-remark" class="form-group form-control" placeholder="备注" required>
@@ -140,5 +112,3 @@
     </div>
   </div>
 </div>
-
-

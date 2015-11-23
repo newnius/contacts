@@ -1,11 +1,10 @@
 <footer class="container" >
-  <div class="footer">
-    <ul class="breadcrumb">
-    <li>&copy;2015&nbsp;<a href="http://blog.newnius.com">吉大易物</a></li>
-    <li><a href="help.php">帮助</a></li>
-    <li><a href="feedback.php">问题反馈</a></li>
-    <li><a href="help.php#qid-6">联系我们</a></li>
-    <li><a href="help.php#qid-1">关于</a></li>
+  <div class="footer navbar-default">
+    <ul class="nav navbar-nav">
+      <li><a href="http://contacts.newnius.com">云通讯录</a></li>
+      <li><a target="_blank" href="http://blog.newnius.com">Newnius</a></li>
+      <li><a target="_blank" href="telephone">号码归属地查询</a></li>
+      <li><a href="#">帮助</a></li>
     </ul>
   </div>
 </footer>

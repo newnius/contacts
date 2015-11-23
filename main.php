@@ -1,12 +1,6 @@
 <?php
   session_start();
-  $_SESSION['contact_uid'] = 1;
   require_once('config.php');
-/*
-  if(!(isset($_SESSION['contact_username']) )){
-    header('location:'.SITE.'/info?notloged');
-    exit;
-  }*/
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -43,7 +37,6 @@
                 <span class="text-info">Loading...</span>
               </a>
             </ul>
-            
           </div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-md-offset-1 ">

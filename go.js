@@ -46,6 +46,14 @@ $(function(){
   $('#btn-add').click(
     function(){
       $('#addContactModal').modal('show');
+      var newDiv = '<div class="input-group form-group">'
+        + '<label for="telephone" class="sr-only">电话号</label>'
+        + '<input type="telephone" class="form-group form-control" placeholder="电话号码">'
+        + '<a class="input-group-addon telephone-input-del" href="javascript:void(0)">'
+        + '<span class="glyphicon glyphicon-trash"></span></a>'
+        + '</div>';
+      var addPhone = '<a class="telephone-add input-group form-group" href="javascript:void(0)"><span class="input-group-addon glyphicon glyphicon-plus"></span></a>';
+      $('#add-contact-telephones').empty().append(newDiv).append(addPhone);
       showGroupOptions('add');
     }
   );
@@ -53,12 +61,14 @@ $(function(){
   $('#btn-add-contact').click(
     function(){
       var contactName = $('#add-contact-name').val();
-      var telephones = '';
-      $('#add-contact-telephones').children().each(
+      var array = new Array();
+      $('#add-contact-telephones').find('input').each(
         function(){
-          telephones += ($(this)).val();
+          if($(this).val().trim() !='')
+            array.push($(this).val());
 	}
       );
+      var telephones = array.join(';');
       var remark = $('#add-contact-remark').val();
       var group = $('#add-contact-group').val();
       var ajax = $.ajax({
@@ -93,12 +103,13 @@ $(function(){
       var contactId = $('#update-contact-id').val();
       var contactName = $('#update-contact-name').val();
       var array = new Array();
-      $('#update-contact-telephones').children("input").each(
+      $('#update-contact-telephones').find('input').each(
         function(){
-          array.push(($(this)).val());
+          if($(this).val().trim() !='')
+            array.push($(this).val());
 	}
       );
-      var telephones = array.join(";");
+      var telephones = array.join(';');
       var remark = $('#update-contact-remark').val();
       var group = $('#update-contact-group').val();
       var ajax = $.ajax({
@@ -168,13 +179,17 @@ $(function(){
       thisLi.append(inputEle);
     });
     $('#groups').on('click', 'ul li .group-remove', function(e){
-      var groupId = $(this).parent().data('group-id'); 
+      var thisLi = $(this).parent().parent();
+      var groupId = thisLi.data('group-id'); 
+      thisLi.remove();
+      deleteGroup(groupId);
     });
 
     $('#groups').on('click', 'ul li .group-edit-ok', function(e){
       var thisLi = $(this).parent().parent();
-      var groupId = thisLi.data('group-id'); 
-      var newGroupName = thisLi.find('input').val()
+      var groupId = thisLi.data('group-id');
+      var newGroupName = thisLi.find('input').val();
+      if(groupId==0)newGroupName = window.groupNames[groupId];
       thisLi.children().remove();
       var newGroupLiInner = '<a class="clickable" href="#">'
         + newGroupName
@@ -201,6 +216,70 @@ $(function(){
       thisLi.append(newGroupLiInner);
     });
 
+    $('#groups').on('click', 'ul li .group-add', function(e){
+      var thisLi = $(this).parent();
+                  
+      var newLi = '<li class="list-group-item"><div class="input-group">'
+        + '<input type="text" class="form-control" value="'
+        + ''
+        + '">'
+        + '<a class="input-group-addon group-add-ok" href="javascript:void(0)"><span class="glyphicon glyphicon-ok"></span></a>'
+        + '<a class="input-group-addon group-add-cancel" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+        + '</div></li>';
+      thisLi.before(newLi);
+    });
+
+    $('#groups').on('click', 'ul li .group-add-ok', function(e){
+      var thisLi = $(this).parent().parent();
+      var groupName = thisLi.find('input').val()
+      thisLi.children().remove();
+      var newGroupLiInner = '<a class="clickable" href="#">'
+        + groupName
+        + '</a>'
+        + '<div class="hidden operates" style="float:right">'
+        + '<a class="group-edit" href="javascript:void(0)"><span class="glyphicon glyphicon-edit"></span></a>'
+        + '&nbsp;&nbsp;<a class="group-remove" href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span></a>'
+        + '</div>'
+      thisLi.append(newGroupLiInner);
+      createGroup(groupName);
+    });
+
+    $('#groups').on('click', 'ul li .group-add-cancel', function(e){
+      var thisLi = $(this).parent().parent();
+      thisLi.remove();
+    });
+
+    $('#add-contact-telephones').on('click', '.telephone-add', function(e){
+      var thisA = $(this);
+      var newDiv = '<div class="input-group form-group">'
+        + '<label for="telephone" class="sr-only">电话号</label>'
+        + '<input type="telephone" class="form-group form-control" placeholder="电话号码">'
+        + '<a class="input-group-addon telephone-input-del" href="javascript:void(0)">'
+        + '<span class="glyphicon glyphicon-trash"></span></a>'
+        + '</div>';
+      thisA.before(newDiv);
+    });
+
+    $('#add-contact-telephones').on('click', '.telephone-input-del', function(e){
+      var thisDiv = $(this).parent();
+      thisDiv.remove();
+    });
+
+    $('#update-contact-telephones').on('click', '.telephone-add', function(e){
+      var thisA = $(this);
+      var newDiv = '<div class="input-group form-group">'
+        + '<label for="telephone" class="sr-only">电话号</label>'
+        + '<input type="telephone" class="form-group form-control" placeholder="电话号码">'
+        + '<a class="input-group-addon telephone-input-del" href="javascript:void(0)">'
+        + '<span class="glyphicon glyphicon-trash"></span></a>'
+        + '</div>';
+      thisA.before(newDiv);
+    });
+
+    $('#update-contact-telephones').on('click', '.telephone-input-del', function(e){
+      var thisDiv = $(this).parent();
+      thisDiv.remove();
+    });
 });
 
 function loadAndShowAllContacts(){
@@ -258,7 +337,7 @@ function loadAndShowAllContacts(){
 }
 
 var phoneFormatter = function(telephones){
-  return telephones.replace(';','<br/>');
+  return telephones.split(';').join('<br/>');
 }
 
 var idFormatter = function(id){
@@ -297,12 +376,19 @@ window.operateEvents = {
     $('#update-contact-telephones').children().remove();
     var telephones = contact.telephones.split(";");
     for(var i=0;i<telephones.length;i++){
-      var newPhone = '<label for="telephone" class="sr-only">电话号</label>'     
+      var newPhone = '<div class="input-group form-group">'
+        + '<label for="telephone" class="sr-only">电话号</label>'
         + '<input type="telephone" class="form-group form-control" placeholder="电话号码" value="'
         + telephones[i]
-        + '">';
+        + '">'
+        + '<a class="input-group-addon telephone-input-del" href="javascript:void(0)">'
+        + '<span class="glyphicon glyphicon-trash"></span></a>'
+        + '</div>';
       $('#update-contact-telephones').append(newPhone);
     }
+    var addPhone = '<a class="telephone-add input-group form-group" href="javascript:void(0)"><span class="input-group-addon glyphicon glyphicon-plus"></span></a>';
+    $('#update-contact-telephones').append(addPhone);
+     
     $('#update-contact-remark').val(contact.remark);
     showGroupOptions('update', contact.group_id);
   },
@@ -350,7 +436,7 @@ var loadAndShowGroups = function(callback){
       for(var i=0; i<groups.length; i++){
         window.groupNames[groups[i].group_id] = groups[i].group_name;
       }
-    callback();
+    if(callback!=null)callback();
     showGroups();
   });
 
@@ -375,6 +461,12 @@ var showGroups = function(){
     + '</div></li>'
     groupList.append(newGroupOption);
   }
+  var addGroupEle = '<li class="list-group-item">'
+    + '<a class="group-add btn btn-default" href="javascript:void(0)">'
+    + '添加分组' 
+    + '</a>'
+    + '</li>'
+    groupList.append(addGroupEle);
 };
 
 var deleteContacts = function(ids){
@@ -400,7 +492,7 @@ var deleteContact = function(contactId){
 };
 
   var updateGroupName = function(groupId, newGroupName){
-      if(isNaN(groupId) || groupNames[groupId]==undefined || groupNames[groupId]==newGroupName)
+      if(isNaN(groupId) || groupNames[groupId]==undefined || groupNames[groupId]==newGroupName )
         return;
       var oldGroupName = window.groupNames[groupId];
       window.groupNames[groupId] = newGroupName;
@@ -417,12 +509,65 @@ var deleteContact = function(contactId){
       ajax.done(function(resStr){
         response = JSON.parse(resStr);
 	if(response.errno === 0 ){
-          $window.groupNames[groupId] = newGroupName;
+          window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
 	}else{
           //alert(response.errno);
           window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
+	}
+      });
+
+      ajax.fail(function(jqXHR,textStatus){
+        alert("Request failed :" + textStatus);
+      });
+    }
+
+  var deleteGroup = function(groupId){
+      if(isNaN(groupId) || window.groupNames[groupId]==undefined)
+        return;
+      //window.groupNames[groupId] = window.groupNames[0];
+      //$table.bootstrapTable("refresh");
+      var ajax = $.ajax({
+        url: "http://localhost/contacts/ajax.php?action=deleteGroup",
+        type: 'POST',
+        data: {
+          groupId: groupId
+	}
+      });
+
+      ajax.done(function(resStr){
+        response = JSON.parse(resStr);
+	if(response.errno === 0 ){
+          window.groupNames[groupId] = undefined;
+          $table.bootstrapTable("refresh");
+	}else{
+          alert(response.msg);
+          //window.groupNames[groupId] = oldGroupName;
+          $table.bootstrapTable("refresh");
+	}
+      });
+
+      ajax.fail(function(jqXHR,textStatus){
+        alert("Request failed :" + textStatus);
+      });
+    }
+
+  var createGroup = function(groupName){
+      var ajax = $.ajax({
+        url: "http://localhost/contacts/ajax.php?action=createGroup",
+        type: 'POST',
+        data: {
+          groupName: groupName
+	}
+      });
+
+      ajax.done(function(resStr){
+        response = JSON.parse(resStr);
+	if(response.errno === 0 ){
+          loadAndShowGroups(null);
+	}else{
+          alert(response.msg);
 	}
       });
 
