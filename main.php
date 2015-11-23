@@ -17,7 +17,7 @@
     <!-- Bootstrap core CSS -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Bootstrap Table core css -->
-    <link rel="stylesheet" href="bootstrap-table/bootstrap-table.min.css">
+    <link rel="stylesheet" href="//cdn.newnius.com/bootstrap-table/bootstrap-table.min.css">
  
     <!-- Custom styles for this template -->
     <link href="style.css" rel="stylesheet"/>
@@ -94,11 +94,11 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!--bootstrap table core js-->
-    <script src="bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="bootstrap-table/bootstrap-table-locale-all.min.js"></script>
-    <script src="bootstrap-table/bootstrap-table-mobile.js"></script>
-    <script src="bootstrap-table/bootstrap-table-export.js"></script>
-    <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-    <script src="go.js"></script>
+    <script src="//cdn.newnius.com/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="//cdn.newnius.com/bootstrap-table/bootstrap-table-locale-all.min.js"></script>
+    <script src="//cdn.newnius.com/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js"></script>
+    <script src="//cdn.newnius.com/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="//cdn.newnius.com/jquery-plugin-tableExport/tableExport.min.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
