@@ -1,5 +1,5 @@
 selections = [];
-window.SITE = "http://localhost/contacts";
+window.SITE = "http://contact.newnius.com";
 
 $(function(){
   $table = $("#table-contacts");
