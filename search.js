@@ -1,3 +1,4 @@
+var SITE = "http://localhost/contacts";
 $(function(){
   showBelong();
   $("#btn-search-1").click(
@@ -8,6 +9,12 @@ $(function(){
       showBelong();
     });
 
+  $("#btn-search").click(
+    function(e){
+      e.preventDefault();
+      var telephone = $("#input-search").val();
+      window.location.href = SITE + "/telephone#" + telephone;
+    });
 });
 
   var showBelong = function(){

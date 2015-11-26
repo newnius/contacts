@@ -100,5 +100,6 @@
     <script src="//cdn.newnius.com/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
     <script src="//cdn.newnius.com/jquery-plugin-tableExport/tableExport.min.js"></script>
     <script src="main.js"></script>
+    <script src="search.js"></script>
   </body>
 </html>

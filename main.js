@@ -1,11 +1,11 @@
 selections = [];
-window.SITE = "http://contact.newnius.com";
+window.SITE = "http://localhost/contacts";
 
 $(function(){
   $table = $("#table-contacts");
 
   var BootstrapTable = $.fn.bootstrapTable.Constructor,
-        _initToolbar = BootstrapTable.prototype.initToolbar,  
+        _initToolbar = BootstrapTable.prototype.initToolbar,
         _initSearch = BootstrapTable.prototype.initSearch;
 
 
@@ -13,7 +13,7 @@ $(function(){
     _initToolbar.apply(this, Array.prototype.slice.apply(arguments));
     var that = this;
     $(document).on('click', 'div[id="groups"] ul li .clickable', function(e){
-      var groupId = $(this).parent().data('group-id') ; 
+      var groupId = $(this).parent().data('group-id'); 
       that.options.selectedGroup = groupId;
       that.options.pageNumber = 1;
       that.searchText = window.groupNames[groupId];
@@ -22,7 +22,7 @@ $(function(){
       //add to indicate that user empty this to really refresh
       that.$toolbar.find('.search input').val('gId:'+groupId);
       });
-   }
+   };
 
   BootstrapTable.prototype.initSearch = function () {
     _initSearch.apply(this, Array.prototype.slice.apply(arguments));
@@ -77,20 +77,20 @@ $(function(){
         type: 'POST',
         data: {
           contactName: contactName,
-	  telephones: telephones,
-	  remark: remark,
-	  groupId: group
-	}
+          telephones: telephones,
+          remark: remark,
+          groupId: group
+        }
       });
 
       ajax.done(function(resStr){
         response = JSON.parse(resStr);
-	if(response.errno === 0 ){
+        if(response.errno === 0 ){
           $('#addContactModal').modal('hide');
           $table.bootstrapTable("refresh");
-	}else{
+        }else{
           alert(response.msg);
-	}
+        }
       });
 
       ajax.fail(function(jqXHR,textStatus){
@@ -108,7 +108,7 @@ $(function(){
         function(){
           if($(this).val().trim() !='')
             array.push($(this).val());
-	}
+       }
       );
       var telephones = array.join(';');
       var remark = $('#update-contact-remark').val();
@@ -119,10 +119,10 @@ $(function(){
         data: {
           contactId: contactId,
           contactName: contactName,
-	  telephones: telephones,
-	  remark: remark,
-	  groupId: group
-	}
+          telephones: telephones,
+          remark: remark,
+          groupId: group
+        }
       });
 
       ajax.done(function(resStr){
@@ -130,9 +130,9 @@ $(function(){
 	if(response.errno === 0 ){
           $('#updateContactModal').modal('hide');
           $table.bootstrapTable("refresh");
-	}else{
+        }else{
           alert(response.msg);
-	}
+        }
       });
 
       ajax.fail(function(jqXHR,textStatus){
@@ -142,7 +142,7 @@ $(function(){
   );
 
 
-  $table.on('check.bs.table uncheck.bs.table ' 
+  $table.on('check.bs.table uncheck.bs.table'
     + 'check-all.bs.table uncheck-all.bs.table', function () {
     $("#remove").prop('disabled', !$table.bootstrapTable('getSelections').length);
        selections = getIdSelections();
@@ -301,7 +301,7 @@ function loadAndShowAllContacts(){
     sortOrder: 'asc', // 设置排序为反序 desc
     smartDisplay: true, // 智能显示 pagination 和 cardview 等
     mobileResponsive: true,
-    showExport: true, 
+    showExport: true,
     columns: [{ // 列设置
         field: 'state',
         title: '选择',
@@ -415,16 +415,16 @@ window.operateEvents = {
   }
 };
 
-  var showGroupOptions = function(modal, selected = -1){
+  var showGroupOptions = function(modal, selected){
     $('#' + modal + '-contact-group').children().remove();
     for(var groupId in groupNames){
       var newGroupOption = '<option value="'
-        + groupId 
+        + groupId
         + '"'
         + (groupId==selected?' selected="selected"':' ')
         + '>'
         + groupNames[groupId]
-        + '</option>'; 
+        + '</option>';
       $('#' + modal + '-contact-group').append(newGroupOption);
     }
   }
@@ -516,14 +516,14 @@ var deleteContact = function(contactId){
 
       ajax.done(function(resStr){
         response = JSON.parse(resStr);
-	if(response.errno === 0 ){
+        if(response.errno === 0 ){
           window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
-	}else{
+        }else{
           alert(response.msg);
           window.groupNames[groupId] = newGroupName;
           $table.bootstrapTable("refresh");
-	}
+       }
       });
 
       ajax.fail(function(jqXHR,textStatus){
@@ -546,14 +546,14 @@ var deleteContact = function(contactId){
 
       ajax.done(function(resStr){
         response = JSON.parse(resStr);
-	if(response.errno === 0 ){
+        if(response.errno === 0 ){
           window.groupNames[groupId] = undefined;
           $table.bootstrapTable("refresh");
-	}else{
+        }else{
           alert(response.msg);
           //window.groupNames[groupId] = oldGroupName;
           $table.bootstrapTable("refresh");
-	}
+        }
       });
 
       ajax.fail(function(jqXHR,textStatus){
