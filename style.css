@@ -3,21 +3,20 @@
   margin: 0 auto;
 }
 
-footer{
-  clear:both;
-  display:block;
+
+/* make sticky footer  */
+body, html {
+  height: 100%;
+}
+
+footer, .push {
+  height: 36px;
+}
+
+footer, footer .ul, footer .breadcrumb {
+  margin-bottom: 0;
+  background-color: transparent;
   text-align:center;
-  font-size:13px;
-  max-width:360px;
-  margin: 0px auto;
-}
-
-footer ul{
-  list-style: none;
-}
-
-footer li{
-  float: left;
 }
 
 footer a:link, footer a:visited{
@@ -29,3 +28,9 @@ footer a:hover {
   text-decoration: underline;
   color: #000000;
 }
+
+.wrapper {
+  min-height: 100%;
+  margin: 0 auto -36px; /* the bottom margin is the negative value of the footer's height */
+}
+/* end */

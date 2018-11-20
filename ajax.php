@@ -1,106 +1,140 @@
 <?php
-  session_start();
 
-  if(isset($_SESSION['contact_uid'])){
-    $uid = $_SESSION['contact_uid'];
-  }else{
-    $response['errno'] = '1';
-    $response['msg'] = '您当前尚未登录';
-    echo json_encode($response);
-    exit;
-  }
+require_once('util4p/util.php');
+require_once('util4p/CRObject.class.php');
 
-  require_once('config.php'); 
-  require_once('functions.php');
-    
-  $response['errno'] = '1';
-  $response['msg'] = 'Invalid request';
-  $invalid_request =  json_encode($response);
+require_once('Code.class.php');
+require_once('GroupManager.class.php');
+require_once('ContactManager.class.php');
 
-  $action = 'getAllContacts';
-  if(isset($_GET['action'])){
-    $action = $_GET['action'];
-  }
-  
-  switch($action){
-    case 'getAllContacts':
-      $contacts = get_all_contacts_by_uid($uid);
-      echo json_encode($contacts);
-      break;
+require_once('user.logic.php');
+require_once('group.logic.php');
+require_once('contact.logic.php');
 
-    case 'getAllGroups':
-      $groups = get_all_groups_by_uid($uid);
-      echo json_encode($groups);
-      break;
+require_once('config.inc.php');
+require_once('init.inc.php');
 
-    case 'addContact':
-      if(!isset($_POST['contactName']) || !isset($_POST['telephones']) || !isset($_POST['remark']) || !isset($_POST['groupId'])){
-        echo $invalid_request;
-        exit;
-      }
-      $res = add_contact($_POST['contactName'], $_POST['telephones'], $_POST['remark'], $uid ,$_POST['groupId']);
-      $response['errno'] = $res==1? 0 : 1;
-      $response['msg'] = $res==1? '':'添加联系人失败';
-      echo json_encode($response);
-      break;
 
-    case 'deleteContact':
-      if(!isset($_POST['contactId'])){
-        echo $invalid_request;
-        exit;
-      }
-      $res = delete_contact_by_id($_POST['contactId'], $uid);
-      $response['errno'] = $res==true?0:1;
-      $response['msg'] = $res==1? '':'删除联系人失败';
-      echo json_encode($response);
-      break;
+function csrf_check($action)
+{
+	/* check referer, just in case I forget to add the method to $post_methods */
+	$referer = $_SERVER['HTTP_REFERER'];
+	$url = parse_url($referer);
+	if (isset($url['host']) && $url['host'] != $_SERVER['HTTP_HOST']) {
+		return false;
+	}
+	$post_methods = array(
+		'group_add',
+        'group_remove',
+        'group_update',
+        'contact_add',
+        'contact_remove',
+        'contact_update',
+		'user_signout'
+	);
+	$csrf_token = null;
+	if(isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+	}
+	if (in_array($action, $post_methods)) {
+		return $csrf_token !== null && isset($_COOKIE['csrf_token']) && $csrf_token === $_COOKIE['csrf_token'];
+	}
+	return true;
+}
 
-    case 'updateContact':
-      if(!isset($_POST['contactId']) || !isset($_POST['contactName']) || !isset($_POST['telephones']) || !isset($_POST['remark']) || !isset($_POST['groupId'])){
-        echo $invalid_request;
-        exit;
-      }
-      $res = update_contact_by_id($_POST['contactId'], $_POST['contactName'], $_POST['telephones'], $_POST['remark'], $uid, $_POST['groupId']);
-      $response['errno'] = $res==1?0:1;
-      $response['msg'] = $res==1? '':'更新联系人失败';
-      echo json_encode($response);
-      break;
+function print_response($res)
+{
+	if (!isset($res['msg']))
+		$res['msg'] = Code::getErrorMsg($res['errno']);
+	$json = json_encode($res);
+	header('Content-type: application/json');
+	echo $json;
+}
 
-    case 'updateGroup':
-      if(!isset($_POST['groupId']) || !isset($_POST['newGroupName']) ){
-        echo $invalid_request;
-        exit;
-      }
-      $res = update_group_by_id($_POST['groupId'], $_POST['newGroupName'], $uid);
-      $response['errno'] = $res == 1?0:1;
-      $response['msg'] = $res == 1? '':'重命名分组失败';
-      echo json_encode($response);
-      break;
 
-    case 'deleteGroup':
-      if(!isset($_POST['groupId']) ){
-        echo $invalid_request;
-        exit;
-      }
-      $res = delete_group_by_id($_POST['groupId'], $uid);
-      $response['errno'] = $res == 1?0:1;
-      $response['msg'] = $res == 1? '':'删除分组失败';
-      echo json_encode($response);
-      break;
+$res = array('errno' => Code::UNKNOWN_REQUEST);
 
-    case 'createGroup':
-      if(!isset($_POST['groupName']) ){
-        echo $invalid_request;
-        exit;
-      }
-      $res = create_group($_POST['groupName'], $uid);
-      $response['errno'] = $res == 1?0:1;
-      $response['msg'] = $res == 1? '':'创建分组失败';
-      echo json_encode($response);
-      break;
+$action = cr_get_GET('action');
 
-    default:
-      echo $invalid_request;
-  }
+if (!csrf_check($action)) {
+	$res['errno'] = 99;
+	$res['msg'] = 'invalid csrf_token';
+	print_response($res);
+	exit(0);
+}
 
-?>
+switch ($action) {
+	case 'group_add':
+		$group = new CRObject();
+		$group->set('name', cr_get_POST('name'));
+		$res = group_add($group);
+		break;
+
+	case 'group_remove':
+		$group = new CRObject();
+		$group->set('id', cr_get_POST('id'));
+		$res = group_remove($group);
+		break;
+
+    case 'group_update':
+        $group = new CRObject();
+        $group->set('id', cr_get_POST('id'));
+        $group->set('name', cr_get_POST('name'));
+        $res = group_update($group);
+        break;
+
+	case 'group_gets':
+		$rule = new CRObject();
+		$rule->set('who', cr_get_GET('who', 'self'));
+		$res = group_gets($rule);
+		break;
+
+    case 'contact_add':
+        $contact = new CRObject();
+        $contact->set('name', cr_get_POST('name'));
+        $contact->set('telephones', cr_get_POST('telephones'));
+        $contact->set('remark', cr_get_POST('remark'));
+        $contact->set('group_id', cr_get_POST('group_id'));
+        $res = contact_add($contact);
+        break;
+
+    case 'contact_remove':
+        $contact = new CRObject();
+        $contact->set('id', cr_get_POST('id'));
+        $res = contact_remove($contact);
+        break;
+
+    case 'contact_update':
+        $contact = new CRObject();
+        $contact->set('id', cr_get_POST('id'));
+        $contact->set('name', cr_get_POST('name'));
+        $contact->set('telephones', cr_get_POST('telephones'));
+        $contact->set('remark', cr_get_POST('remark'));
+        $contact->set('group_id', cr_get_POST('group_id'));
+        $res = contact_update($contact);
+        break;
+
+    case 'contact_gets':
+        $rule = new CRObject();
+        $rule->set('who', cr_get_GET('who', 'self'));
+        $res = contact_gets($rule);
+        break;
+
+	case 'user_signout':
+		$res = user_signout();
+		break;
+
+	case 'log_gets':
+		$rule = new CRObject();
+		$rule->set('who', cr_get_GET('who', 'self'));
+		$rule->set('offset', cr_get_GET('offset'));
+		$rule->set('limit', cr_get_GET('limit'));
+		$rule->set('order', 'latest');
+		$res = log_gets($rule);
+		break;
+
+	default:
+		break;
+}
+
+print_response($res);
