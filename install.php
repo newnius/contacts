@@ -82,19 +82,19 @@ function create_table_log()
 //		'DROP `tel_log`' => 'DROP TABLE IF EXISTS `tel_log`',
 		'CREATE `tel_log`' =>
 			'CREATE TABLE `tel_log`(
-								`id` BIGINT AUTO_INCREMENT,
-								 PRIMARY KEY(`id`),
-								`scope` VARCHAR(128) NOT NULL,
-								 INDEX(`scope`),
-								`tag` VARCHAR(128) NOT NULL,
-								 INDEX(`tag`),
-								`level` INT NOT NULL, /* too small value sets, no need to index */
-								`time` BIGINT NOT NULL,
-								 INDEX(`time`), 
-								`ip` BIGINT NOT NULL,
-								 INDEX(`ip`),
-								`content` json 
-						)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci'
+		  		`id` BIGINT AUTO_INCREMENT,
+	  			 PRIMARY KEY(`id`),
+				`scope` VARCHAR(128) NOT NULL,
+				 INDEX(`scope`),
+				`tag` VARCHAR(128) NOT NULL,
+				 INDEX(`tag`),
+				`level` INT NOT NULL, /* too small value sets, no need to index */
+				`time` BIGINT NOT NULL,
+				 INDEX(`time`), 
+			  	`ip` BIGINT NOT NULL,
+				 INDEX(`ip`),
+				`content` json 
+			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci'
 	);
 	execute_sqls($sqls);
 }
