@@ -7,15 +7,15 @@ require_once('util4p/SQLBuilder.class.php');
 class ContactManager
 {
 	/*
-	 * do add site
+	 * do add contact
 	 */
 	public static function add(CRObject $contact)
 	{
 		$name = $contact->get('name', '');
 		$telephones = $contact->get('telephones', '');
-        $remark = $contact->get('remark', '');
-        $group_id = $contact->getInt('group_id');
-        $owner = $contact->get('owner');
+		$remark = $contact->get('remark', '');
+		$group_id = $contact->getInt('group_id', 0);
+		$owner = $contact->get('owner');
 
 		$key_values = array('name' => '?', 'telephones' => '?', 'remark' => '?', 'group_id' => '?', 'owner' => '?');
 		$builder = new SQLBuilder();
@@ -44,8 +44,8 @@ class ContactManager
 		$builder->where($where);
 		$builder->limit($offset, $limit);
 		$sql = $builder->build();
-		$sites = (new MysqlPDO())->executeQuery($sql, $params);
-		return $sites;
+		$contacts = (new MysqlPDO())->executeQuery($sql, $params);
+		return $contacts;
 	}
 
 	/* */
@@ -60,13 +60,13 @@ class ContactManager
 		$builder->where($where);
 		$sql = $builder->build();
 		$contacts = (new MysqlPDO())->executeQuery($sql, $params);
-		return count($contacts) > 0 ? $contacts[0] : null;
+		return count($contacts) == 1 ? $contacts[0] : null;
 	}
 
 	/* */
 	public static function remove(CRObject $contact)
 	{
-		$id = $contact->getInt('id');
+		$id = $contact->getInt('id', 0);
 		$where = array('id' => '?');
 		$builder = new SQLBuilder();
 		$builder->delete('tel_contact');
@@ -80,13 +80,13 @@ class ContactManager
 	/* */
 	public static function update(CRObject $contact)
 	{
-        $id = $contact->getInt('id');
-        $name = $contact->get('name', '');
-        $telephones = $contact->get('telephones', '');
-        $remark = $contact->get('remark', '');
-        $group_id = $contact->getInt('group_id');
+		$id = $contact->getInt('id', 0);
+		$name = $contact->get('name', '');
+		$telephones = $contact->get('telephones', '');
+		$remark = $contact->get('remark', '');
+		$group_id = $contact->getInt('group_id', 0);
 
-        $key_values = array('name' => '?', 'telephones' => '?', 'remark' => '?', 'group_id' => '?');
+		$key_values = array('name' => '?', 'telephones' => '?', 'remark' => '?', 'group_id' => '?');
 		$where = array('id' => '?');
 		$builder = new SQLBuilder();
 		$builder->update('tel_contact', $key_values);
@@ -94,7 +94,7 @@ class ContactManager
 		$sql = $builder->build();
 		$params = array($name, $telephones, $remark, $group_id, $id);
 		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return $count !== null;
 	}
 
 }

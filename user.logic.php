@@ -15,14 +15,14 @@ require_once('init.inc.php');
 function user_get(CRObject $info)
 {
 	$res['user'] = UserManager::getByOpenID($info->get('open_id'));
-	if($res['user'] === null){
-		if(!UserManager::add($info)){
+	if ($res['user'] === null) {
+		if (!UserManager::add($info)) {
 			$res['errno'] = Code::FAIL;
 			return $res;
 		}
 		$res['user'] = UserManager::getByOpenID($info->get('open_id'));
 	}
-	$res['errno'] = $res['user'] !== null?Code::SUCCESS:Code::UNKNOWN_ERROR;
+	$res['errno'] = $res['user'] !== null ? Code::SUCCESS : Code::UNKNOWN_ERROR;
 	return $res;
 }
 

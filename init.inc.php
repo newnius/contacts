@@ -16,7 +16,8 @@ init_logger();
 init_Session();
 init_accessMap();
 
-function init_mysql(){
+function init_mysql()
+{
 	$config = new CRObject();
 	$config->set('host', DB_HOST);
 	$config->set('port', DB_PORT);
@@ -27,7 +28,8 @@ function init_mysql(){
 	MysqlPDO::configure($config);
 }
 
-function init_redis(){
+function init_redis()
+{
 	$config = new CRObject();
 	$config->set('scheme', REDIS_SCHEME);
 	$config->set('host', REDIS_HOST);
@@ -36,13 +38,15 @@ function init_redis(){
 	RedisDAO::configure($config);
 }
 
-function init_logger(){
+function init_logger()
+{
 	$config = new CRObject();
 	$config->set('db_table', 'tel_log');
 	CRLogger::configure($config);
 }
 
-function init_Session(){
+function init_Session()
+{
 	$config = new CRObject();
 	$config->set('time_out', SESSION_TIME_OUT);
 	$config->set('bind_ip', BIND_SESSION_WITH_IP);
@@ -50,7 +54,8 @@ function init_Session(){
 	Session::configure($config);
 }
 
-function init_accessMap(){
+function init_accessMap()
+{
 	// $operation => array of roles
 	$map = array(
 		/* user */
@@ -68,10 +73,10 @@ function init_accessMap(){
 		'contact.remove' => array('root', 'admin', 'developer', 'normal'),
 
 		/* group */
-        'group.add' => array('root', 'admin', 'developer', 'normal'),
-        'group.get' => array('root', 'admin', 'developer', 'normal'),
-        'group.update' => array('root', 'admin', 'developer', 'normal'),
-        'group.remove' => array('root', 'admin', 'developer', 'normal'),
+		'group.add' => array('root', 'admin', 'developer', 'normal'),
+		'group.get' => array('root', 'admin', 'developer', 'normal'),
+		'group.update' => array('root', 'admin', 'developer', 'normal'),
+		'group.remove' => array('root', 'admin', 'developer', 'normal'),
 
 		/* ucenter entry show control */
 		'ucenter.home' => array('root', 'admin', 'developer', 'normal'),

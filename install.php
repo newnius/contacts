@@ -59,10 +59,10 @@ function create_table_group()
 
 function create_table_contact()
 {
-    $sqls = array(
+	$sqls = array(
 //        'DROP `tel_contact`' => 'DROP TABLE IF EXISTS `tel_contact`',
-        'CREATE `tel_contact`' =>
-            'CREATE TABLE `tel_contact`(
+		'CREATE `tel_contact`' =>
+			'CREATE TABLE `tel_contact`(
 				`id` BIGINT AUTO_INCREMENT,
 				 PRIMARY KEY(`id`),
 				`name` VARCHAR(32) NOT NULL,
@@ -72,8 +72,8 @@ function create_table_contact()
 				`owner` int NOT NULL,
 				 INDEX(`owner`)
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci',
-    );
-    execute_sqls($sqls);
+	);
+	execute_sqls($sqls);
 }
 
 function create_table_log()

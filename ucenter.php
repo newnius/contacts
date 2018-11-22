@@ -12,7 +12,7 @@ require_once('init.inc.php');
 
 
 if (Session::get('uid') === null) {
-	header('location:index.php?a=notloged');
+	header('location:/?notloged');
 	exit;
 }
 
@@ -23,14 +23,14 @@ $nickname = Session::get('nickname');
 if (isset($_GET['logs'])) {
 	$page_type = 'logs';
 
-}elseif (isset($_GET['logs_all'])) {
+} elseif (isset($_GET['logs_all'])) {
 	$page_type = 'logs_all';
 
 } elseif (isset($_GET['contacts'])) {
 	$page_type = 'contacts';
 
 } elseif (isset($_GET['home'])) {
-    $page_type = 'home';
+	$page_type = 'home';
 
 }
 
@@ -50,7 +50,7 @@ foreach ($entries as $entry) {
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<?php require_once('head.php');?>
+	<?php require_once('head.php'); ?>
 	<title>个人中心 | 云通讯录</title>
 	<link href="//cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/bootstrap-table.min.css" rel="stylesheet">
 	<script type="text/javascript">
@@ -77,31 +77,31 @@ foreach ($entries as $entry) {
 					</ul>
 				</div>
 
-                <?php if ($page_type === 'contacts') { ?>
-                <div id="groups" class="panel panel-default">
-                    <div class="panel-heading">分组</div>
-                    <ul class="list-group">
-                        <a class="list-group-item" >
-                            <span class="text-info">Loading...</span>
-                        </a>
-                    </ul>
-                </div>
-                <?php } ?>
+				<?php if ($page_type === 'contacts') { ?>
+					<div id="groups" class="panel panel-default">
+						<div class="panel-heading">分组</div>
+						<ul class="list-group">
+							<a class="list-group-item">
+								<span class="text-info">Loading...</span>
+							</a>
+						</ul>
+					</div>
+				<?php } ?>
 			</div>
 
 			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-                <div class="visible-xs visible-sm">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Menu Bar</div>
-                        <ul class="nav nav-pills panel-body">
-                            <?php foreach ($visible_entries as $entry) { ?>
-                                <li role="presentation" <?php if ($page_type == $entry[0]) echo 'class="disabled"'; ?> >
-                                    <a href="?<?= $entry[0] ?>"><?= $entry[1] ?></a>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </div>
-                </div>
+				<div class="visible-xs visible-sm">
+					<div class="panel panel-default">
+						<div class="panel-heading">Menu Bar</div>
+						<ul class="nav nav-pills panel-body">
+							<?php foreach ($visible_entries as $entry) { ?>
+								<li role="presentation" <?php if ($page_type == $entry[0]) echo 'class="disabled"'; ?> >
+									<a href="?<?= $entry[0] ?>"><?= $entry[1] ?></a>
+								</li>
+							<?php } ?>
+						</ul>
+					</div>
+				</div>
 
 				<?php if ($page_type === 'home') { ?>
 					<div id="home">
@@ -175,7 +175,6 @@ foreach ($entries as $entry) {
 <script src="//cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/mobile/bootstrap-table-mobile.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/tableexport@5.0.3/dist/js/tableexport.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/jquery-ui@1.12.1/ui/widget.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.1/tableExport.min.js"></script>
 </body>
 </html>

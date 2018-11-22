@@ -25,15 +25,15 @@ function csrf_check($action)
 	}
 	$post_methods = array(
 		'group_add',
-        'group_remove',
-        'group_update',
-        'contact_add',
-        'contact_remove',
-        'contact_update',
+		'group_remove',
+		'group_update',
+		'contact_add',
+		'contact_remove',
+		'contact_update',
 		'user_signout'
 	);
 	$csrf_token = null;
-	if(isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+	if (isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
 		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
 	}
 	if (in_array($action, $post_methods)) {
@@ -76,12 +76,12 @@ switch ($action) {
 		$res = group_remove($group);
 		break;
 
-    case 'group_update':
-        $group = new CRObject();
-        $group->set('id', cr_get_POST('id'));
-        $group->set('name', cr_get_POST('name'));
-        $res = group_update($group);
-        break;
+	case 'group_update':
+		$group = new CRObject();
+		$group->set('id', cr_get_POST('id'));
+		$group->set('name', cr_get_POST('name'));
+		$res = group_update($group);
+		break;
 
 	case 'group_gets':
 		$rule = new CRObject();
@@ -89,36 +89,36 @@ switch ($action) {
 		$res = group_gets($rule);
 		break;
 
-    case 'contact_add':
-        $contact = new CRObject();
-        $contact->set('name', cr_get_POST('name'));
-        $contact->set('telephones', cr_get_POST('telephones'));
-        $contact->set('remark', cr_get_POST('remark'));
-        $contact->set('group_id', cr_get_POST('group_id'));
-        $res = contact_add($contact);
-        break;
+	case 'contact_add':
+		$contact = new CRObject();
+		$contact->set('name', cr_get_POST('name'));
+		$contact->set('telephones', cr_get_POST('telephones'));
+		$contact->set('remark', cr_get_POST('remark'));
+		$contact->set('group_id', cr_get_POST('group_id'));
+		$res = contact_add($contact);
+		break;
 
-    case 'contact_remove':
-        $contact = new CRObject();
-        $contact->set('id', cr_get_POST('id'));
-        $res = contact_remove($contact);
-        break;
+	case 'contact_remove':
+		$contact = new CRObject();
+		$contact->set('id', cr_get_POST('id'));
+		$res = contact_remove($contact);
+		break;
 
-    case 'contact_update':
-        $contact = new CRObject();
-        $contact->set('id', cr_get_POST('id'));
-        $contact->set('name', cr_get_POST('name'));
-        $contact->set('telephones', cr_get_POST('telephones'));
-        $contact->set('remark', cr_get_POST('remark'));
-        $contact->set('group_id', cr_get_POST('group_id'));
-        $res = contact_update($contact);
-        break;
+	case 'contact_update':
+		$contact = new CRObject();
+		$contact->set('id', cr_get_POST('id'));
+		$contact->set('name', cr_get_POST('name'));
+		$contact->set('telephones', cr_get_POST('telephones'));
+		$contact->set('remark', cr_get_POST('remark'));
+		$contact->set('group_id', cr_get_POST('group_id'));
+		$res = contact_update($contact);
+		break;
 
-    case 'contact_gets':
-        $rule = new CRObject();
-        $rule->set('who', cr_get_GET('who', 'self'));
-        $res = contact_gets($rule);
-        break;
+	case 'contact_gets':
+		$rule = new CRObject();
+		$rule->set('who', cr_get_GET('who', 'self'));
+		$res = contact_gets($rule);
+		break;
 
 	case 'user_signout':
 		$res = user_signout();

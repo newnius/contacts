@@ -1,11 +1,8 @@
-<?php
-require_once('global.inc.php');
-?>
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="zh-CN">
 <head>
-	<?php require_once('head.php');?>
-	<title>Manual | PV Counter</title>
+	<?php require_once('head.php'); ?>
+	<title>帮助中心 | 用户中心</title>
 </head>
 <body>
 <div class="wrapper">
@@ -14,7 +11,7 @@ require_once('global.inc.php');
 		<div class="row">
 			<div class="col-sm-4 col-md-3 hidden-xs">
 				<div id="help-nav" class="panel panel-default">
-					<div class="panel-heading">Documents</div>
+					<div class="panel-heading">列表</div>
 					<ul class="nav nav-pills nav-stacked panel-body">
 						<li role="presentation">
 							<a href="#introduction">介绍</a>
@@ -22,9 +19,9 @@ require_once('global.inc.php');
 						<li role="presentation">
 							<a href="#about">关于</a>
 						</li>
-                        <li role="TOS">
-                            <a href="#about">TOS</a>
-                        </li>
+						<li role="TOS">
+							<a href="#about">TOS</a>
+						</li>
 						<li role="presentation">
 							<a href="#privacy">隐私</a>
 						</li>
@@ -47,12 +44,12 @@ require_once('global.inc.php');
 						<p>云通讯录,电话本,联系人,同步,备份,网络备份,联系人去重,号码归属地查询,骚扰电话查询</p>
 					</div>
 				</div>
-                <div id="privacy" class="panel panel-default">
-                    <div class="panel-heading">TOS</div>
-                    <div class="panel-body">
-                        <p>用户使用限制</p>
-                    </div>
-                </div>
+				<div id="privacy" class="panel panel-default">
+					<div class="panel-heading">TOS</div>
+					<div class="panel-body">
+						<p>用户使用限制</p>
+					</div>
+				</div>
 				<div id="privacy" class="panel panel-default">
 					<div class="panel-heading">隐私保护</div>
 					<div class="panel-body">
@@ -63,8 +60,8 @@ require_once('global.inc.php');
 					<div class="panel-heading">反馈</div>
 					<div class="panel-body">
 						<p>感谢使用云通讯录，如果您在使用过程中遇到任何问题，请通过邮箱
-                            <a href="mailto:support@newnius.com?subject=From Tel">support@newnius.com</a>
-                            联系。
+							<a href="mailto:support@newnius.com?subject=From Tel">support@newnius.com</a>
+							联系。
 						</p>
 					</div>
 				</div>

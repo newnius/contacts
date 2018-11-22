@@ -74,11 +74,11 @@ if ($response['errno'] === 0) {
 		$log = new CRObject();
 		$log->set('scope', $user['uid']);
 		$log->set('tag', 'user.login');
-		$content = array('uid' => $user['uid'], 'email' => $email, 'role' => $role, 'response' => $res['errno']);
+		$content = array('uid' => $user['uid'], 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log($log);
 
-		header('location: /ucenter.php');
+		header('location: /ucenter');
 		exit;
 	} else {
 		echo Code::getErrorMsg($res['errno']);

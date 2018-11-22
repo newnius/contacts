@@ -15,7 +15,7 @@ class UserManager
 		$open_id = $user->get('open_id');
 		$email = $user->get('email');
 		$role = $user->get('role');
-        $level = $user->getInt('level', 0);
+		$level = $user->getInt('level', 0);
 		if ($email !== null && !Validator::isEmail($email)) {
 			return false;
 		}

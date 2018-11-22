@@ -7,12 +7,12 @@ require_once('util4p/SQLBuilder.class.php');
 class GroupManager
 {
 	/*
-	 * do add site
+	 * do add group
 	 */
 	public static function add(CRObject $group)
 	{
 		$name = $group->get('name');
-        $owner = $group->get('owner');
+		$owner = $group->get('owner');
 
 		$key_values = array('name' => '?', 'owner' => '?');
 		$builder = new SQLBuilder();
@@ -57,7 +57,7 @@ class GroupManager
 		$builder->where($where);
 		$sql = $builder->build();
 		$groups = (new MysqlPDO())->executeQuery($sql, $params);
-		return count($groups) > 0 ? $groups[0] : null;
+		return count($groups) == 1 ? $groups[0] : null;
 	}
 
 	/* */
@@ -71,16 +71,16 @@ class GroupManager
 		$sql = $builder->build();
 		$params = array($id);
 		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count > 0;
+		return $count == 1;
 	}
 
 	/* */
 	public static function update(CRObject $group)
 	{
-        $id = $group->getInt('id');
-        $name = $group->get('name');
+		$id = $group->getInt('id');
+		$name = $group->get('name');
 
-        $key_values = array('name' => '?');
+		$key_values = array('name' => '?');
 		$where = array('id' => '?');
 		$builder = new SQLBuilder();
 		$builder->update('tel_group', $key_values);
@@ -88,7 +88,7 @@ class GroupManager
 		$sql = $builder->build();
 		$params = array($name, $id);
 		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return $count !== null;
 	}
 
 }

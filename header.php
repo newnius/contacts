@@ -12,46 +12,46 @@ $oauth_login_url = OAUTH_SITE . '/login?response_type=code&client_id=' . OAUTH_C
 $oauth_register_url = OAUTH_SITE . '/register?response_type=code&client_id=' . OAUTH_CLIENT_ID . '&redirect_uri=' . BASE_URL . '/auth&state=' . $state . '&scope=email';
 ?>
 <header id="header" class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="<?= BASE_URL ?>">云通讯录</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <form class="navbar-form navbar-left" role="search" action="javascript:void(0)">
-                    <div class="input-group input-group">
-                        <input id="input-search" type="text" class="form-control" placeholder="归属地查询">
-                        <span class="input-group-btn">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+			        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="<?= BASE_URL ?>">云通讯录</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav navbar-right">
+				<form class="navbar-form navbar-left" role="search" action="javascript:void(0)">
+					<div class="input-group input-group">
+						<input id="input-search" type="text" class="form-control" placeholder="归属地查询">
+						<span class="input-group-btn">
                             <button id="btn-search" type="submit" class="btn btn-default">搜索</button>
                         </span>
-                    </div>
-                </form>
-                <?php if (!Session::get('uid')) { ?>
-                    <li><a href="<?= $oauth_login_url ?>">登陆</a>
-                    </li>
-                    <li><a href="<?= $oauth_register_url ?>">注册</a></li>
-                <?php } else { ?>
-                    <li><a href="<?= BASE_URL ?>/ucenter"><?= htmlspecialchars(Session::get('nickname')) ?></a></li>
-                <?php } ?>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">更多<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/help">帮助</a></li>
-                        <li role="separator" class="divider"></li>
-                        <?php if (Session::get('uid')) { ?>
-                            <li><a href="javascript:void(0)" id="btn-signout-header">退出</a></li>
-                        <?php } ?>
-                    </ul>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container -->
+					</div>
+				</form>
+				<?php if (!Session::get('uid')) { ?>
+					<li><a href="<?= $oauth_login_url ?>">登陆</a>
+					</li>
+					<li><a href="<?= $oauth_register_url ?>">注册</a></li>
+				<?php } else { ?>
+					<li><a href="<?= BASE_URL ?>/ucenter"><?= htmlspecialchars(Session::get('nickname')) ?></a></li>
+				<?php } ?>
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button"
+					   aria-haspopup="true" aria-expanded="false">更多<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/help">帮助</a></li>
+						<li role="separator" class="divider"></li>
+						<?php if (Session::get('uid')) { ?>
+							<li><a href="javascript:void(0)" id="btn-signout-header">退出</a></li>
+						<?php } ?>
+					</ul>
+				</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container -->
 </header>

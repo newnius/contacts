@@ -34,7 +34,7 @@ class Spider
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout-2);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout - 2);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:')); //避免data数据过长问题
 		curl_setopt($ch, CURLOPT_POST, false);
@@ -42,26 +42,24 @@ class Spider
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		$ret = curl_exec($ch);
 		$err = curl_error($ch);
-		if(!$err){
+		if (!$err) {
 			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 			$header = substr($ret, 0, $header_size);
 			$headers = array();
 			// Split the string on every "double" new line.
 			$arrRequests = explode("\r\n\r\n", $header);
 			// Loop of response headers. The "count() -1" is to avoid an empty row for the extra line break before the body of the response.
-			for ($index = 0; $index < count($arrRequests) -1; $index++) {
-				foreach (explode("\r\n", $arrRequests[$index]) as $i => $line)
-				{
+			for ($index = 0; $index < count($arrRequests) - 1; $index++) {
+				foreach (explode("\r\n", $arrRequests[$index]) as $i => $line) {
 					if ($i === 0)
 						$headers[$index]['http_code'] = $line;
-					else
-					{
+					else {
 						list ($key, $value) = explode(': ', $line);
 						$headers[$index][$key] = $value;
 					}
 				}
 			}
-			$this->headers = $headers[max(0, count($headers)-1)];
+			$this->headers = $headers[max(0, count($headers) - 1)];
 			$this->body = substr($ret, $header_size);
 			$this->info = curl_getinfo($ch);
 		}
@@ -82,7 +80,7 @@ class Spider
 		//set the url, number of POST vars, POST data
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout-2);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout - 2);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
@@ -90,26 +88,24 @@ class Spider
 
 		$ret = curl_exec($ch);
 		$err = curl_error($ch);
-		if(!$err){
+		if (!$err) {
 			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 			$header = substr($ret, 0, $header_size);
 			$headers = array();
 			// Split the string on every "double" new line.
 			$arrRequests = explode("\r\n\r\n", $header);
 			// Loop of response headers. The "count() -1" is to avoid an empty row for the extra line break before the body of the response.
-			for ($index = 0; $index < count($arrRequests) -1; $index++) {
-				foreach (explode("\r\n", $arrRequests[$index]) as $i => $line)
-				{
+			for ($index = 0; $index < count($arrRequests) - 1; $index++) {
+				foreach (explode("\r\n", $arrRequests[$index]) as $i => $line) {
 					if ($i === 0)
 						$headers[$index]['http_code'] = $line;
-					else
-					{
+					else {
 						list ($key, $value) = explode(': ', $line);
 						$headers[$index][$key] = $value;
 					}
 				}
 			}
-			$this->headers = $headers[max(0, count($headers)-1)];
+			$this->headers = $headers[max(0, count($headers) - 1)];
 			$this->body = substr($ret, $header_size);
 			$this->info = curl_getinfo($ch);
 		}
